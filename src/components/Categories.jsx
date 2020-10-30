@@ -1,5 +1,6 @@
-import React from 'react'
+import React from "react";
 
+import PropTypes from "prop-types";
 // class Categories extends React.Component {
 //     state = {
 //         activeItem: 3,
@@ -18,7 +19,7 @@ import React from 'react'
 //                 <ul>
 //                     <li>Все</li>
 //                         {items.map((name, index) => (
-//                            <li 
+//                            <li
 //                             className={this.state.activeItem === index ? 'active' : ''}
 //                             onClick={ () => this.onSelectItem(index) } key={`${name}_${index}`}>{name}</li>
 //                          ))}
@@ -27,35 +28,45 @@ import React from 'react'
 //      )}
 // }
 
+const Categories = React.memo(function Categories({
+  activeCategory,
+  items,
+  onClickCategory,
+}) {
+  return (
+    <div className="categories">
+      <ul>
+        <li
+          className={activeCategory === null ? "active" : ""}
+          onClick={() => onClickCategory(null)}
+        >
+          {" "}
+          Все{" "}
+        </li>
+        {items &&
+          items.map((name, index) => (
+            <li
+              onClick={() => onClickCategory(index)}
+              className={activeCategory === index ? "active" : ""}
+              key={`${name}_${index}`}
+            >
+              {name}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+});
 
-const Categories = React.memo(
-  function Categories({items, onClickItem}) {
-    const [activeItem, setActiveItem] = React.useState(null);
+Categories.propTypes = {
+ // activeCategory: PropTypes.oneOf([PropTypes.number, null]),
+  items: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onClickCategory: PropTypes.func.isRequired,
+};
 
-    const onSelectItem = (index) => {
-    setActiveItem(index);
-    onClickItem(index);
-    }
-
-
-    return (
-        <div className="categories">
-            <ul>
-              <li className={activeItem === null ? 'active' : ''}
-               onClick = {() => onSelectItem(null)}> Все </li>
-              { items &&
-                  items.map((name, index) => (
-         
-                  <li
-                    onClick={ () => onSelectItem(index) } 
-                    className={activeItem === index ? 'active' : ''}
-                    key={`${name}_${index}`}>
-                    {name}</li>
-                   
-                  ))}
-            </ul>
-          </div>
-    )}
-);
+Categories.defaultProps = {
+  activeCategory: null,
+  items: [],
+};
 
 export default Categories;
